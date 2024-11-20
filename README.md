@@ -1,2 +1,1 @@
-# course-selling-app
-Course-selling-app
+# course selling app
