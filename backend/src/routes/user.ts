@@ -74,7 +74,7 @@ userRouter.post("/signin", async (req: Request, res: Response) => {
 
   const passwordMatch = await bcrypt.compare(
     signinBody.password,
-    user.password
+    user.password as string
   );
 
   if (passwordMatch) {
@@ -82,10 +82,8 @@ userRouter.post("/signin", async (req: Request, res: Response) => {
       {
         id: user._id,
       },
-      JWT_USER_PASSWORD
+      JWT_USER_PASSWORD as string
     );
-
-    // todo: do cookie logic
 
     res.json({
       token: token,

@@ -64,15 +64,17 @@ adminRouter.post("/signin", async (req, res) => {
 
   const passwordMatch = await bcrypt.compare(
     signinBody.password,
+    // @ts-ignore
     admin.password
   );
 
   if (passwordMatch) {
     const token = jwt.sign(
       {
+        // @ts-ignore
         id: admin._id,
       },
-      JWT_ADMIN_PASSWORD
+      JWT_ADMIN_PASSWORD as string
     );
 
     res.json({
@@ -108,7 +110,7 @@ adminRouter.put("/course", adminMiddleware, async (req, res) => {
 
   const { title, description, imageUrl, price, courseId } = req.body;
 
-  const course = await adminModel.updateOne(
+  await courseModel.updateOne(
     {
       _id: courseId,
       creatorId: adminId,
@@ -123,7 +125,6 @@ adminRouter.put("/course", adminMiddleware, async (req, res) => {
 
   res.json({
     message: "Course updated",
-    courseId: course._id,
   });
 });
 

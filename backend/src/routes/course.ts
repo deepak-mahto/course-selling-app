@@ -3,6 +3,7 @@ const courseRouter = Router();
 import { courseModel, purchaseModel } from "../database/db";
 import userMiddleware from "../middleware/user";
 
+// @ts-ignore
 courseRouter.post("/purchase", userMiddleware, async (req, res) => {
   const userId = req.userId;
   const courseId = req.body.courseId;
