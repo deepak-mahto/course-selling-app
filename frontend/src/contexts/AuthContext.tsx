@@ -22,9 +22,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const navigate = useNavigate();
   const { toast } = useToast();
 
-  // Simulated auth functions
   const login = (email: string, password: string, role: "admin" | "user") => {
-    // In a real app, this would make an API call
     console.log("Logging in:", { email, password, role });
     setUser({ id: "1", email, role });
     localStorage.setItem("user", JSON.stringify({ id: "1", email, role }));
@@ -36,7 +34,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const signup = (email: string, password: string, role: "admin" | "user") => {
-    // In a real app, this would make an API call
     console.log("Signing up:", { email, password, role });
     setUser({ id: "1", email, role });
     localStorage.setItem("user", JSON.stringify({ id: "1", email, role }));
