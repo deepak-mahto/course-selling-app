@@ -3,7 +3,7 @@ import { JWT_ADMIN_PASSWORD } from "../config";
 import { Request, Response, NextFunction } from "express";
 
 function adminMiddleware(req: Request, res: Response, next: NextFunction) {
-  const token = req.headers.token;
+  const token = req.headers.authorization;
 
   const decode = jwt.verify(token as string, JWT_ADMIN_PASSWORD as string);
 

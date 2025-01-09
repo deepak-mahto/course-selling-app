@@ -3,7 +3,7 @@ import { Request, Response, NextFunction } from "express";
 import { JWT_USER_PASSWORD } from "../config";
 
 function userMiddleware(req: Request, res: Response, next: NextFunction) {
-  const token = req.headers.token;
+  const token = req.headers.authorization;
 
   if (!token) {
     return res.status(401).json({
