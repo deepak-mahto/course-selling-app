@@ -30,10 +30,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const navigate = useNavigate();
   const { toast } = useToast();
 
-  const login = (email: string, password: string, role: "admin" | "user") => {
-    console.log("Logging in:", { email, password, role });
+  const login = async (
+    email: string,
+    password: string,
+    role: "admin" | "user"
+  ) => {
     setUser({ id: "1", email, role });
-    localStorage.setItem("user", JSON.stringify({ id: "1", email, role }));
+    const response = await axios.post(`${BACKEND_URL}/api/v1/admin/signin`, {
+      email,
+      password,
+    });
+
+    localStorage.setItem("token", response.data.token);
+
     toast({
       title: "Logged in successfully",
       description: `Welcome back, ${email}!`,
@@ -67,7 +76,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const logout = () => {
     setUser(null);
-    localStorage.removeItem("user");
+    localStorage.removeItem("token");
     toast({
       title: "Logged out successfully",
       description: "Come back soon!",

@@ -25,7 +25,7 @@ const courseSchema = new Schema({
   imageUrl: String,
   level: String,
   duration: String,
-  creatorId: ObjectId,
+  creatorId: { type: ObjectId, ref: "admin", required: true },
 });
 
 const purchaseSchema = new Schema({
