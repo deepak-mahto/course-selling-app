@@ -24,25 +24,42 @@ adminRouter.post("/signup", async (req, res) => {
 
   const signupBody: signupBodyType = data;
 
-  let errorThrown = false;
+  const existingUser = await adminModel.findOne({
+    email: signupBody.email,
+  });
+
+  if (existingUser) {
+    res.status(411).json({
+      message: "Email already taken or incorrect inputs",
+    });
+  }
+
   try {
     const hashedPassword = await bcrypt.hash(signupBody.password, 5);
 
-    await adminModel.create({
+    const admin = await adminModel.create({
       email: signupBody.email,
       password: hashedPassword,
       firstName: signupBody.firstName,
       lastName: signupBody.lastName,
     });
+
+    const adminId = admin._id;
+
+    const token = jwt.sign(
+      {
+        adminId,
+      },
+      JWT_ADMIN_PASSWORD as string
+    );
+
+    res.json({
+      message: "Signup successfull",
+      token: token,
+    });
   } catch (error) {
     res.json({
       message: "Admin already exist",
-    });
-    errorThrown = true;
-  }
-  if (!errorThrown) {
-    res.json({
-      message: "Sign up succeeded",
     });
   }
 });
@@ -78,6 +95,7 @@ adminRouter.post("/signin", async (req, res) => {
     );
 
     res.json({
+      message: "Login successfull",
       token: token,
     });
   } else {
@@ -89,13 +107,14 @@ adminRouter.post("/signin", async (req, res) => {
 
 adminRouter.post("/course", adminMiddleware, async (req, res) => {
   const adminId = req.userId;
-  const { title, description, imageUrl, price } = req.body;
+  const { title, description, imageUrl, price, level } = req.body;
 
   const course = await courseModel.create({
     title: title,
     description: description,
     imageUrl: imageUrl,
     price: price,
+    level: level,
     creatorId: adminId,
   });
 
