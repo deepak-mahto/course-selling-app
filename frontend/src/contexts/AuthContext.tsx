@@ -1,6 +1,8 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
+import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "../components/ui/use-toast";
+import { BACKEND_URL } from "../config";
 
 interface User {
   id: string;
@@ -11,7 +13,13 @@ interface User {
 interface AuthContextType {
   user: User | null;
   login: (email: string, password: string, role: "admin" | "user") => void;
-  signup: (email: string, password: string, role: "admin" | "user") => void;
+  signup: (
+    email: string,
+    password: string,
+    firstName: string,
+    lastName: string,
+    role: "admin" | "user"
+  ) => void;
   logout: () => void;
 }
 
@@ -33,10 +41,23 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     navigate(role === "admin" ? "/admin/dashboard" : "/dashboard");
   };
 
-  const signup = (email: string, password: string, role: "admin" | "user") => {
-    console.log("Signing up:", { email, password, role });
+  const signup = async (
+    firstName: string,
+    lastName: string,
+    email: string,
+    password: string,
+    role: "admin" | "user"
+  ) => {
     setUser({ id: "1", email, role });
-    localStorage.setItem("user", JSON.stringify({ id: "1", email, role }));
+    const response = await axios.post(`${BACKEND_URL}/api/v1/admin/signup`, {
+      email,
+      password,
+      firstName,
+      lastName,
+    });
+
+    localStorage.setItem("token", response.data.token);
+
     toast({
       title: "Account created successfully",
       description: "Welcome to our platform!",
