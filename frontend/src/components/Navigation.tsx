@@ -1,10 +1,11 @@
-import { Button } from "./ui/button";
+import { Button } from "../components/ui/button";
 import { useAuth } from "../contexts/AuthContext";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { MobileSidebar } from "./MobileSidebar";
 
-export function Navigation() {
+const Navigation = () => {
   const { user, logout } = useAuth();
+  const location = useLocation();
 
   return (
     <nav className="bg-white shadow-sm">
@@ -13,11 +14,16 @@ export function Navigation() {
           <div className="flex items-center gap-2">
             <MobileSidebar />
             <Link to="/" className="text-xl font-bold text-primary">
-              TechCourses
+              EduPlatform
             </Link>
           </div>
           <div className="hidden md:flex items-center space-x-4">
-            <Link to="/courses" className="text-gray-700 hover:text-primary">
+            <Link
+              to="/courses"
+              className={`text-gray-700 hover:text-primary ${
+                location.pathname === "/courses" ? "text-primary" : ""
+              }`}
+            >
               All Courses
             </Link>
             {!user && (
@@ -34,7 +40,11 @@ export function Navigation() {
               <>
                 <Link
                   to={user.role === "admin" ? "/admin/dashboard" : "/dashboard"}
-                  className="text-gray-700 hover:text-primary"
+                  className={`text-gray-700 hover:text-primary ${
+                    location.pathname.includes("dashboard")
+                      ? "text-primary"
+                      : ""
+                  }`}
                 >
                   Dashboard
                 </Link>
@@ -48,4 +58,6 @@ export function Navigation() {
       </div>
     </nav>
   );
-}
+};
+
+export default Navigation;

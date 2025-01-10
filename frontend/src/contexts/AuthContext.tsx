@@ -35,13 +35,21 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     password: string,
     role: "admin" | "user"
   ) => {
-    setUser({ id: "1", email, role });
-    const response = await axios.post(`${BACKEND_URL}/api/v1/admin/signin`, {
-      email,
-      password,
-    });
+    if (role === "admin") {
+      setUser({ id: "1", email, role });
+      const response = await axios.post(`${BACKEND_URL}/api/v1/admin/signin`, {
+        email,
+        password,
+      });
 
-    localStorage.setItem("token", response.data.token);
+      localStorage.setItem("token", response.data.token);
+    } else {
+      const response = await axios.post(`${BACKEND_URL}/api/v1/user/signin`, {
+        email,
+        password,
+      });
+      localStorage.setItem("token", response.data.token);
+    }
 
     toast({
       title: "Logged in successfully",
@@ -57,15 +65,26 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     password: string,
     role: "admin" | "user"
   ) => {
-    setUser({ id: "1", email, role });
-    const response = await axios.post(`${BACKEND_URL}/api/v1/admin/signup`, {
-      email,
-      password,
-      firstName,
-      lastName,
-    });
+    if (role === "admin") {
+      setUser({ id: "1", email, role });
+      const response = await axios.post(`${BACKEND_URL}/api/v1/admin/signup`, {
+        email,
+        password,
+        firstName,
+        lastName,
+      });
 
-    localStorage.setItem("token", response.data.token);
+      localStorage.setItem("token", response.data.token);
+    } else {
+      setUser({ id: "1", email, role });
+      const response = await axios.post(`${BACKEND_URL}/api/v1/user/signup`, {
+        email,
+        password,
+        firstName,
+        lastName,
+      });
+      localStorage.setItem("token", response.data.token);
+    }
 
     toast({
       title: "Account created successfully",

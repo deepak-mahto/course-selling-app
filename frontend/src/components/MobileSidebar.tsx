@@ -1,19 +1,20 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
-import { Button } from "./ui/button";
+import { Button } from "../components/ui/button";
 import {
   Sheet,
   SheetContent,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
-} from "./ui/sheet";
+} from "../components/ui/sheet";
 import { Menu } from "lucide-react";
 import { useState } from "react";
 
 export function MobileSidebar() {
   const { user, logout } = useAuth();
   const [open, setOpen] = useState(false);
+  const location = useLocation();
 
   const handleLinkClick = () => {
     setOpen(false);
@@ -39,14 +40,18 @@ export function MobileSidebar() {
         <div className="flex flex-col gap-4 mt-4">
           <Link
             to="/"
-            className="text-lg font-semibold hover:text-primary"
+            className={`text-lg font-semibold hover:text-primary ${
+              location.pathname === "/" ? "text-primary" : ""
+            }`}
             onClick={handleLinkClick}
           >
             Home
           </Link>
           <Link
             to="/courses"
-            className="text-lg hover:text-primary"
+            className={`text-lg hover:text-primary ${
+              location.pathname === "/courses" ? "text-primary" : ""
+            }`}
             onClick={handleLinkClick}
           >
             All Courses
@@ -55,14 +60,18 @@ export function MobileSidebar() {
             <>
               <Link
                 to="/login"
-                className="text-lg hover:text-primary"
+                className={`text-lg hover:text-primary ${
+                  location.pathname === "/login" ? "text-primary" : ""
+                }`}
                 onClick={handleLinkClick}
               >
                 Login
               </Link>
               <Link
                 to="/signup"
-                className="text-lg hover:text-primary"
+                className={`text-lg hover:text-primary ${
+                  location.pathname === "/signup" ? "text-primary" : ""
+                }`}
                 onClick={handleLinkClick}
               >
                 Sign Up
@@ -73,7 +82,9 @@ export function MobileSidebar() {
             <>
               <Link
                 to={user.role === "admin" ? "/admin/dashboard" : "/dashboard"}
-                className="text-lg hover:text-primary"
+                className={`text-lg hover:text-primary ${
+                  location.pathname.includes("dashboard") ? "text-primary" : ""
+                }`}
                 onClick={handleLinkClick}
               >
                 Dashboard
