@@ -24,11 +24,11 @@ adminRouter.post("/signup", async (req, res) => {
 
   const signupBody: signupBodyType = data;
 
-  const existingUser = await adminModel.findOne({
+  const existingAdmin = await adminModel.findOne({
     email: signupBody.email,
   });
 
-  if (existingUser) {
+  if (existingAdmin) {
     res.status(411).json({
       message: "Email already taken or incorrect inputs",
     });

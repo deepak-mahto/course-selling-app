@@ -24,26 +24,42 @@ userRouter.post("/signup", async (req: Request, res: Response) => {
 
   const signupBody: signupBodyType = data;
 
-  let errorThrown = false;
+  const existingUser = await userModel.findOne({
+    email: signupBody.email,
+  });
+
+  if (existingUser) {
+    res.status(411).json({
+      message: "User already exist or Incorrect inputs",
+    });
+  }
+
   try {
     const hashedPassword = await bcrypt.hash(signupBody.password, 5);
 
-    await userModel.create({
+    const user = await userModel.create({
       email: signupBody.email,
       password: hashedPassword,
       firstName: signupBody.firstName,
       lastName: signupBody.lastName,
     });
+
+    const userId = user._id;
+
+    const token = jwt.sign(
+      {
+        userId,
+      },
+      JWT_USER_PASSWORD as string
+    );
+
+    res.json({
+      message: "Signup successfull",
+      token: token,
+    });
   } catch (error) {
     res.json({
       message: "User already exist",
-    });
-    errorThrown = true;
-  }
-
-  if (!errorThrown) {
-    res.json({
-      message: "Sign up succeeded",
     });
   }
 });
