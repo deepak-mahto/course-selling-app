@@ -26,7 +26,7 @@ const Navigation = () => {
             >
               All Courses
             </Link>
-            {!user && (
+            {!user ? (
               <>
                 <Link to="/login">
                   <Button variant="ghost">Login</Button>
@@ -35,8 +35,7 @@ const Navigation = () => {
                   <Button>Sign Up</Button>
                 </Link>
               </>
-            )}
-            {user && (
+            ) : (
               <>
                 <Link
                   to={user.role === "admin" ? "/admin/dashboard" : "/dashboard"}

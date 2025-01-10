@@ -44,6 +44,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       localStorage.setItem("token", response.data.token);
     } else {
+      setUser({ id: "1", email, role });
       const response = await axios.post(`${BACKEND_URL}/api/v1/user/signin`, {
         email,
         password,

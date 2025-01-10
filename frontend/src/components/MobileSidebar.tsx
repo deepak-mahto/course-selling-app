@@ -56,7 +56,7 @@ export function MobileSidebar() {
           >
             All Courses
           </Link>
-          {!user && (
+          {!user ? (
             <>
               <Link
                 to="/login"
@@ -77,8 +77,7 @@ export function MobileSidebar() {
                 Sign Up
               </Link>
             </>
-          )}
-          {user && (
+          ) : (
             <>
               <Link
                 to={user.role === "admin" ? "/admin/dashboard" : "/dashboard"}
