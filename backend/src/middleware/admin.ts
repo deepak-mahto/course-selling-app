@@ -9,6 +9,7 @@ function adminMiddleware(req: Request, res: Response, next: NextFunction) {
 
   if (decode) {
     req.userId = (decode as JwtPayload).id;
+
     next();
   } else {
     res.json({

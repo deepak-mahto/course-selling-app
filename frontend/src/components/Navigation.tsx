@@ -14,7 +14,7 @@ const Navigation = () => {
           <div className="flex items-center gap-2">
             <MobileSidebar />
             <Link to="/" className="text-xl font-bold text-primary">
-              EduPlatform
+              TechCourses
             </Link>
           </div>
           <div className="hidden md:flex items-center space-x-4">

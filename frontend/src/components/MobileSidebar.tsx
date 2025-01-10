@@ -35,7 +35,7 @@ export function MobileSidebar() {
       </SheetTrigger>
       <SheetContent side="left" className="w-[300px] sm:w-[400px]">
         <SheetHeader>
-          <SheetTitle>EduPlatform</SheetTitle>
+          <SheetTitle>TechCourses</SheetTitle>
         </SheetHeader>
         <div className="flex flex-col gap-4 mt-4">
           <Link

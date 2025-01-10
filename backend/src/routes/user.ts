@@ -44,11 +44,9 @@ userRouter.post("/signup", async (req: Request, res: Response) => {
       lastName: signupBody.lastName,
     });
 
-    const userId = user._id;
-
     const token = jwt.sign(
       {
-        userId,
+        id: user._id,
       },
       JWT_USER_PASSWORD as string
     );

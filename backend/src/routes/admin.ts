@@ -44,11 +44,9 @@ adminRouter.post("/signup", async (req, res) => {
       lastName: signupBody.lastName,
     });
 
-    const adminId = admin._id;
-
     const token = jwt.sign(
       {
-        adminId,
+        id: admin._id,
       },
       JWT_ADMIN_PASSWORD as string
     );
