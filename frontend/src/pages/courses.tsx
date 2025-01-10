@@ -8,10 +8,22 @@ import {
 } from "../components/ui/card";
 import { Badge } from "../components/ui/badge";
 import { Button } from "../components/ui/button";
+import { useAuth } from "../contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
 import { useFetch } from "../hooks/use-fetch";
 
 const Courses = () => {
+  const { user, enrollInCourse } = useAuth();
+  const navigate = useNavigate();
   const courses = useFetch();
+
+  const handleEnroll = (courseId: string) => {
+    if (!user) {
+      navigate("/login");
+      return;
+    }
+    enrollInCourse(courseId);
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-accent/50 to-background p-6">
@@ -26,10 +38,10 @@ const Courses = () => {
               imageUrl: string;
               title: string;
               level: string;
-              description: string;
               creatorId: {
                 firstName: string;
               };
+              description: string;
               duration: string;
               price: string;
             }) => (
@@ -64,9 +76,15 @@ const Courses = () => {
                 </CardContent>
                 <CardFooter className="mt-auto">
                   <div className="flex items-center justify-between w-full">
-                    <span className="text-lg font-bold">${course.price}</span>
-                    <Button className="transition-all duration-300 hover:scale-105">
-                      Enroll Now
+                    <span className="text-lg font-bold">₹{course.price}</span>
+                    <Button
+                      className="transition-all duration-300 hover:scale-105"
+                      onClick={() => handleEnroll(course._id)}
+                      disabled={user?.enrolledCourses.includes(course._id)}
+                    >
+                      {user?.enrolledCourses.includes(course._id)
+                        ? "Enrolled"
+                        : "Enroll Now"}
                     </Button>
                   </div>
                 </CardFooter>

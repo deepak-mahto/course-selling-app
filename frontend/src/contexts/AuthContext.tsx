@@ -1,13 +1,14 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "../components/ui/use-toast";
+import axios from "axios";
 import { BACKEND_URL } from "../config";
 
 interface User {
   id: string;
   email: string;
   role: "admin" | "user";
+  enrolledCourses: string[];
 }
 
 interface AuthContextType {
@@ -21,6 +22,7 @@ interface AuthContextType {
     role: "admin" | "user"
   ) => void;
   logout: () => void;
+  enrollInCourse: (courseId: string) => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -36,7 +38,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     role: "admin" | "user"
   ) => {
     if (role === "admin") {
-      setUser({ id: "1", email, role });
+      setUser({ id: "1", email, role, enrolledCourses: [] });
       const response = await axios.post(`${BACKEND_URL}/api/v1/admin/signin`, {
         email,
         password,
@@ -44,7 +46,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       localStorage.setItem("token", response.data.token);
     } else {
-      setUser({ id: "1", email, role });
+      setUser({ id: "1", email, role, enrolledCourses: [] });
       const response = await axios.post(`${BACKEND_URL}/api/v1/user/signin`, {
         email,
         password,
@@ -67,7 +69,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     role: "admin" | "user"
   ) => {
     if (role === "admin") {
-      setUser({ id: "1", email, role });
+      setUser({ id: "1", email, role, enrolledCourses: [] });
       const response = await axios.post(`${BACKEND_URL}/api/v1/admin/signup`, {
         email,
         password,
@@ -77,7 +79,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       localStorage.setItem("token", response.data.token);
     } else {
-      setUser({ id: "1", email, role });
+      setUser({ id: "1", email, role, enrolledCourses: [] });
       const response = await axios.post(`${BACKEND_URL}/api/v1/user/signup`, {
         email,
         password,
@@ -104,6 +106,36 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     navigate("/");
   };
 
+  const enrollInCourse = async (courseId: string) => {
+    if (!user) return;
+
+    const updatedUser = {
+      ...user,
+      enrolledCourses: [...user.enrolledCourses, courseId],
+    };
+
+    setUser(updatedUser);
+
+    await axios.post(
+      `${BACKEND_URL}/api/v1/course/purchase`,
+      {
+        courseId: courseId,
+      },
+      {
+        headers: {
+          Authorization: localStorage.getItem("token"),
+        },
+      }
+    );
+
+    toast({
+      title: "Enrolled Successfully",
+      description: "You have been enrolled in the course!",
+    });
+
+    navigate("/dashboard");
+  };
+
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
     if (storedUser) {
@@ -112,7 +144,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, login, signup, logout }}>
+    <AuthContext.Provider
+      value={{ user, login, signup, logout, enrollInCourse }}
+    >
       {children}
     </AuthContext.Provider>
   );

@@ -102,7 +102,7 @@ const Index = () => {
                         <CardFooter className="mt-auto">
                           <div className="flex items-center justify-between w-full">
                             <span className="text-lg font-bold">
-                              ${course.price}
+                              ₹{course.price}
                             </span>
                             <Link to={`/courses/${course._id}`}>
                               <Button>Learn More</Button>

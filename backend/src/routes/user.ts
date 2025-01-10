@@ -119,9 +119,11 @@ userRouter.get(
       userId,
     });
 
-    const courseData = await courseModel.find({
-      _id: { $in: purchases.map((x) => x.courseId) },
-    });
+    const courseData = await courseModel
+      .find({
+        _id: { $in: purchases.map((x) => x.courseId) },
+      })
+      .populate("creatorId", "firstName");
 
     res.json({
       purchases,
