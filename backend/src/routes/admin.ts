@@ -127,7 +127,7 @@ adminRouter.put("/course/:id", adminMiddleware, async (req, res) => {
   const adminId = req.userId;
   const courseId = req.params.id;
 
-  const { title, description, imageUrl, price } = req.body;
+  const { title, description, imageUrl, duration, price, level } = req.body;
 
   await courseModel.updateOne(
     {
@@ -135,15 +135,31 @@ adminRouter.put("/course/:id", adminMiddleware, async (req, res) => {
       creatorId: adminId,
     },
     {
-      title: title,
       description: description,
       imageUrl: imageUrl,
+      title: title,
       price: price,
+      level: level,
+      duration: duration,
     }
   );
 
   res.json({
     message: "Course updated",
+  });
+});
+
+adminRouter.delete("/course/:id", adminMiddleware, async (req, res) => {
+  const adminId = req.userId;
+  const courseId = req.params.id;
+
+  await courseModel.deleteOne({
+    _id: courseId,
+    creatorId: adminId,
+  });
+
+  res.json({
+    message: "Course deleted",
   });
 });
 

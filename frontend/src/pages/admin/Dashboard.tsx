@@ -87,12 +87,32 @@ const AdminDashboard = () => {
                       <td className="p-4">{creatorId.firstName}</td>
                       <td className="p-4">{level}</td>
                       <td className="p-4">${price}</td>
-                      <td className="p-4">
+                      <td className="flex gap-2 p-4">
                         <Link to={`/admin/courses/edit/${_id}`}>
                           <Button variant="outline" size="sm">
                             Edit
                           </Button>
                         </Link>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => {
+                            const deleteCourse = async () => {
+                              await axios.delete(
+                                `${BACKEND_URL}/api/v1/admin/course/${_id}`,
+                                {
+                                  headers: {
+                                    Authorization:
+                                      localStorage.getItem("token"),
+                                  },
+                                }
+                              );
+                            };
+                            deleteCourse();
+                          }}
+                        >
+                          Delete
+                        </Button>
                       </td>
                     </tr>
                   )
