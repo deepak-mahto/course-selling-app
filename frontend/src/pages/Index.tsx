@@ -107,8 +107,8 @@ const Index = () => {
                               <span className="text-lg font-bold">
                                 ₹{course.price}
                               </span>
-                              <Link to={`/courses/${course._id}`}>
-                                <Button>Learn More</Button>
+                              <Link to={`/login`}>
+                                <Button>Enroll Now</Button>
                               </Link>
                             </div>
                           </CardFooter>
