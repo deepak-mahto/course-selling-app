@@ -2,7 +2,6 @@ import React, { createContext, useContext, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "../components/ui/use-toast";
 import axios from "axios";
-import { BACKEND_URL } from "../config";
 
 interface User {
   id: string;
@@ -39,18 +38,24 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   ) => {
     if (role === "admin") {
       setUser({ id: "1", email, role, enrolledCourses: [] });
-      const response = await axios.post(`${BACKEND_URL}/api/v1/admin/signin`, {
-        email,
-        password,
-      });
+      const response = await axios.post(
+        "https://tech-courses-be.onrender.com/api/v1/admin/signin",
+        {
+          email,
+          password,
+        }
+      );
 
       localStorage.setItem("token", response.data.token);
     } else {
       setUser({ id: "1", email, role, enrolledCourses: [] });
-      const response = await axios.post(`${BACKEND_URL}/api/v1/user/signin`, {
-        email,
-        password,
-      });
+      const response = await axios.post(
+        "https://tech-courses-be.onrender.com/api/v1/user/signin",
+        {
+          email,
+          password,
+        }
+      );
       localStorage.setItem("token", response.data.token);
     }
 
@@ -70,22 +75,28 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   ) => {
     if (role === "admin") {
       setUser({ id: "1", email, role, enrolledCourses: [] });
-      const response = await axios.post(`${BACKEND_URL}/api/v1/admin/signup`, {
-        email,
-        password,
-        firstName,
-        lastName,
-      });
+      const response = await axios.post(
+        "https://tech-courses-be.onrender.com/api/v1/admin/signup",
+        {
+          email,
+          password,
+          firstName,
+          lastName,
+        }
+      );
 
       localStorage.setItem("token", response.data.token);
     } else {
       setUser({ id: "1", email, role, enrolledCourses: [] });
-      const response = await axios.post(`${BACKEND_URL}/api/v1/user/signup`, {
-        email,
-        password,
-        firstName,
-        lastName,
-      });
+      const response = await axios.post(
+        "https://tech-courses-be.onrender.com/api/v1/user/signup",
+        {
+          email,
+          password,
+          firstName,
+          lastName,
+        }
+      );
       localStorage.setItem("token", response.data.token);
     }
 
@@ -117,7 +128,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setUser(updatedUser);
 
     await axios.post(
-      `${BACKEND_URL}/api/v1/course/purchase`,
+      "https://tech-courses-be.onrender.com/api/v1/course/purchase",
       {
         courseId: courseId,
       },

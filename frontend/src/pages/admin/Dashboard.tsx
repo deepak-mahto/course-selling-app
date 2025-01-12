@@ -4,16 +4,16 @@ import { useEffect, useState } from "react";
 import { Button } from "../../components/ui/button";
 import { Plus } from "lucide-react";
 import { Link } from "react-router-dom";
-import { BACKEND_URL } from "../../config";
 import axios from "axios";
 
 const useFetch = () => {
   const [courses, setCourses] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const getCourses = async () => {
       const response = await axios.get(
-        `${BACKEND_URL}/api/v1/admin/course/bulk`,
+        "https://tech-courses-be.onrender.com/api/v1/admin/course/bulk",
         {
           headers: {
             Authorization: localStorage.getItem("token"),
@@ -21,17 +21,21 @@ const useFetch = () => {
         }
       );
       setCourses(response.data.courses);
+      setLoading(false);
     };
     getCourses();
   }, []);
 
-  return courses;
+  return {
+    courses,
+    loading,
+  };
 };
 
 const AdminDashboard = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
-  const courses = useFetch();
+  const { courses, loading } = useFetch();
 
   useEffect(() => {
     if (!user || user.role !== "admin") {
@@ -65,59 +69,65 @@ const AdminDashboard = () => {
                   <th className="text-left p-4">Actions</th>
                 </tr>
               </thead>
-              <tbody>
-                {courses.map(
-                  ({
-                    _id,
-                    title,
-                    creatorId,
-                    level,
-                    price,
-                  }: {
-                    _id: string;
-                    title: string;
-                    creatorId: {
-                      firstName: string;
-                    };
-                    level: string;
-                    price: string;
-                  }) => (
-                    <tr key={_id} className="border-b hover:bg-accent/5">
-                      <td className="p-4">{title}</td>
-                      <td className="p-4">{creatorId.firstName}</td>
-                      <td className="p-4">{level}</td>
-                      <td className="p-4">${price}</td>
-                      <td className="flex gap-2 p-4">
-                        <Link to={`/admin/courses/edit/${_id}`}>
-                          <Button variant="outline" size="sm">
-                            Edit
+              {loading ? (
+                <div className="flex justify-center items-center">
+                  Loading...
+                </div>
+              ) : (
+                <tbody>
+                  {courses.map(
+                    ({
+                      _id,
+                      title,
+                      creatorId,
+                      level,
+                      price,
+                    }: {
+                      _id: string;
+                      title: string;
+                      creatorId: {
+                        firstName: string;
+                      };
+                      level: string;
+                      price: string;
+                    }) => (
+                      <tr key={_id} className="border-b hover:bg-accent/5">
+                        <td className="p-4">{title}</td>
+                        <td className="p-4">{creatorId.firstName}</td>
+                        <td className="p-4">{level}</td>
+                        <td className="p-4">${price}</td>
+                        <td className="flex gap-2 p-4">
+                          <Link to={`/admin/courses/edit/${_id}`}>
+                            <Button variant="outline" size="sm">
+                              Edit
+                            </Button>
+                          </Link>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => {
+                              const deleteCourse = async () => {
+                                await axios.delete(
+                                  `https://tech-courses-be.onrender.com/api/v1/admin/course/${_id}`,
+                                  {
+                                    headers: {
+                                      Authorization:
+                                        localStorage.getItem("token"),
+                                    },
+                                  }
+                                );
+                              };
+                              deleteCourse();
+                            }}
+                          >
+                            Delete
                           </Button>
-                        </Link>
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => {
-                            const deleteCourse = async () => {
-                              await axios.delete(
-                                `${BACKEND_URL}/api/v1/admin/course/${_id}`,
-                                {
-                                  headers: {
-                                    Authorization:
-                                      localStorage.getItem("token"),
-                                  },
-                                }
-                              );
-                            };
-                            deleteCourse();
-                          }}
-                        >
-                          Delete
-                        </Button>
-                      </td>
-                    </tr>
-                  )
-                )}
-              </tbody>
+                        </td>
+                      </tr>
+                    )
+                  )}
+                </tbody>
+              )}
             </table>
           </div>
         </div>

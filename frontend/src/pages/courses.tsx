@@ -15,7 +15,7 @@ import { useFetch } from "../hooks/use-fetch";
 const Courses = () => {
   const { user, enrollInCourse } = useAuth();
   const navigate = useNavigate();
-  const courses = useFetch();
+  const { courses, loading } = useFetch();
 
   const handleEnroll = (courseId: string) => {
     if (!user) {
@@ -24,6 +24,14 @@ const Courses = () => {
     }
     enrollInCourse(courseId);
   };
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-screen w-full">
+        Loading...
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-accent/50 to-background p-6">

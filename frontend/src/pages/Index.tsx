@@ -19,7 +19,7 @@ import { useFetch } from "../hooks/use-fetch";
 const Index = () => {
   const currentYear = new Date().getFullYear();
 
-  const courses = useFetch();
+  const { courses, loading } = useFetch();
   const recentCourses = courses.slice(-3);
 
   return (
@@ -54,68 +54,72 @@ const Index = () => {
           <h2 className="text-3xl font-bold text-primary mb-8 text-center">
             Recent Courses
           </h2>
-          <Carousel className="w-full max-w-5xl mx-auto">
-            <CarouselContent>
-              {recentCourses.map(
-                (course: {
-                  _id: string;
-                  imageUrl: string;
-                  title: string;
-                  level: string;
-                  description: string;
-                  creatorId: {
-                    firstName: string;
-                  };
-                  duration: string;
-                  price: string;
-                }) => (
-                  <CarouselItem
-                    key={course._id}
-                    className="md:basis-1/2 lg:basis-1/3"
-                  >
-                    <div className="p-1">
-                      <Card className="flex flex-col h-full transition-all duration-300 hover:shadow-xl hover:-translate-y-1 hover:bg-accent/5">
-                        <div className="aspect-video w-full overflow-hidden rounded-t-lg">
-                          <img
-                            src={course.imageUrl}
-                            alt={course.title}
-                            className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-                          />
-                        </div>
-                        <CardHeader>
-                          <div className="flex justify-between items-start">
-                            <CardTitle className="text-xl">
-                              {course.title}
-                            </CardTitle>
-                            <Badge variant="secondary">{course.level}</Badge>
+          {loading ? (
+            <div className="flex justify-center items-center">Loading...</div>
+          ) : (
+            <Carousel className="w-full max-w-5xl mx-auto">
+              <CarouselContent>
+                {recentCourses.map(
+                  (course: {
+                    _id: string;
+                    imageUrl: string;
+                    title: string;
+                    level: string;
+                    description: string;
+                    creatorId: {
+                      firstName: string;
+                    };
+                    duration: string;
+                    price: string;
+                  }) => (
+                    <CarouselItem
+                      key={course._id}
+                      className="md:basis-1/2 lg:basis-1/3"
+                    >
+                      <div className="p-1">
+                        <Card className="flex flex-col h-full transition-all duration-300 hover:shadow-xl hover:-translate-y-1 hover:bg-accent/5">
+                          <div className="aspect-video w-full overflow-hidden rounded-t-lg">
+                            <img
+                              src={course.imageUrl}
+                              alt={course.title}
+                              className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                            />
                           </div>
-                          <CardDescription>
-                            {course.description}
-                          </CardDescription>
-                        </CardHeader>
-                        <CardContent>
-                          <div className="flex items-center justify-between text-sm text-muted-foreground">
-                            <span>By {course.creatorId.firstName}</span>
-                            <span>{course.duration}</span>
-                          </div>
-                        </CardContent>
-                        <CardFooter className="mt-auto">
-                          <div className="flex items-center justify-between w-full">
-                            <span className="text-lg font-bold">
-                              ₹{course.price}
-                            </span>
-                            <Link to={`/courses/${course._id}`}>
-                              <Button>Learn More</Button>
-                            </Link>
-                          </div>
-                        </CardFooter>
-                      </Card>
-                    </div>
-                  </CarouselItem>
-                )
-              )}
-            </CarouselContent>
-          </Carousel>
+                          <CardHeader>
+                            <div className="flex justify-between items-start">
+                              <CardTitle className="text-xl">
+                                {course.title}
+                              </CardTitle>
+                              <Badge variant="secondary">{course.level}</Badge>
+                            </div>
+                            <CardDescription>
+                              {course.description}
+                            </CardDescription>
+                          </CardHeader>
+                          <CardContent>
+                            <div className="flex items-center justify-between text-sm text-muted-foreground">
+                              <span>By {course.creatorId.firstName}</span>
+                              <span>{course.duration}</span>
+                            </div>
+                          </CardContent>
+                          <CardFooter className="mt-auto">
+                            <div className="flex items-center justify-between w-full">
+                              <span className="text-lg font-bold">
+                                ₹{course.price}
+                              </span>
+                              <Link to={`/courses/${course._id}`}>
+                                <Button>Learn More</Button>
+                              </Link>
+                            </div>
+                          </CardFooter>
+                        </Card>
+                      </div>
+                    </CarouselItem>
+                  )
+                )}
+              </CarouselContent>
+            </Carousel>
+          )}
         </div>
       </div>
 

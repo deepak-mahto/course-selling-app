@@ -24,7 +24,6 @@ import {
 } from "../../components/ui/select";
 import { useToast } from "../../components/ui/use-toast";
 import axios from "axios";
-import { BACKEND_URL } from "../../config";
 
 interface Course {
   _id: string;
@@ -76,7 +75,7 @@ const EditCourse = () => {
   const { id } = useParams();
   const { toast } = useToast();
   const { data: courses, loading } = useFetch<Course[]>(
-    `${BACKEND_URL}/api/v1/admin/course/bulk`
+    "https://tech-courses-be.onrender.com/api/v1/admin/course/bulk"
   );
 
   const course = courses?.find((c) => c._id === id);
@@ -121,7 +120,7 @@ const EditCourse = () => {
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
       const response = await axios.put(
-        `${BACKEND_URL}/api/v1/admin/course/${id}`,
+        `https://tech-courses-be.onrender.com/api/v1/admin/course/${id}`,
         values,
         {
           headers: {
@@ -147,7 +146,7 @@ const EditCourse = () => {
   };
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <div className="flex justify-center items-center">Loading...</div>;
   }
 
   if (!course) {

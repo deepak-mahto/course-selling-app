@@ -24,7 +24,6 @@ import {
 } from "../../components/ui/select";
 import { useToast } from "../../components/ui/use-toast";
 import axios from "axios";
-import { BACKEND_URL } from "../../config";
 
 const formSchema = z.object({
   title: z.string().min(1, "Title is required"),
@@ -60,7 +59,7 @@ const CreateCourse = () => {
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     await axios.post(
-      `${BACKEND_URL}/api/v1/admin/course`,
+      "https://tech-courses-be.onrender.com/api/v1/admin/course",
       {
         title: values.title,
         description: values.description,
