@@ -8,11 +8,17 @@ courseRouter.post(
   userMiddleware,
   async (req: Request, res: Response) => {
     const userId = req.userId;
-    const courseId = req.body.courseId;
+    const { courseId, imageUrl, title, duration, level, creatorName } =
+      req.body;
 
     await purchaseModel.create({
       userId,
       courseId,
+      imageUrl,
+      title,
+      duration,
+      level,
+      creatorName,
     });
 
     res.json({

@@ -1,5 +1,4 @@
 import mongoose from "mongoose";
-import { string } from "zod";
 
 const Schema = mongoose.Schema;
 const ObjectId = mongoose.Types.ObjectId;
@@ -30,6 +29,11 @@ const courseSchema = new Schema({
 
 const purchaseSchema = new Schema({
   userId: ObjectId,
+  imageUrl: String,
+  title: String,
+  duration: String,
+  level: String,
+  creatorName: String,
   courseId: ObjectId,
 });
 

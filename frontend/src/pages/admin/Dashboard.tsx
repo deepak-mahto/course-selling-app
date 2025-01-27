@@ -5,6 +5,7 @@ import { Button } from "../../components/ui/button";
 import { Plus } from "lucide-react";
 import { Link } from "react-router-dom";
 import axios from "axios";
+import { BACKEND_URL } from "../../config";
 
 const useFetch = () => {
   const [courses, setCourses] = useState([]);
@@ -13,7 +14,7 @@ const useFetch = () => {
   useEffect(() => {
     const getCourses = async () => {
       const response = await axios.get(
-        "https://tech-courses-be.onrender.com/api/v1/admin/course/bulk",
+        `${BACKEND_URL}/api/v1/admin/course/bulk`,
         {
           headers: {
             Authorization: localStorage.getItem("token"),
@@ -108,7 +109,7 @@ const AdminDashboard = () => {
                             onClick={() => {
                               const deleteCourse = async () => {
                                 await axios.delete(
-                                  `https://tech-courses-be.onrender.com/api/v1/admin/course/${_id}`,
+                                  `${BACKEND_URL}/api/v1/admin/course/${_id}`,
                                   {
                                     headers: {
                                       Authorization:

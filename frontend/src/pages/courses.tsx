@@ -17,12 +17,19 @@ const Courses = () => {
   const navigate = useNavigate();
   const { courses, loading } = useFetch();
 
-  const handleEnroll = (courseId: string) => {
+  const handleEnroll = (
+    courseId: string,
+    imageUrl: string,
+    title: string,
+    duration: string,
+    level: string,
+    creatorName: string
+  ) => {
     if (!user) {
       navigate("/login");
       return;
     }
-    enrollInCourse(courseId);
+    enrollInCourse(courseId, imageUrl, title, duration, level, creatorName);
   };
 
   if (loading) {
@@ -87,7 +94,16 @@ const Courses = () => {
                     <span className="text-lg font-bold">₹{course.price}</span>
                     <Button
                       className="transition-all duration-300 hover:scale-105"
-                      onClick={() => handleEnroll(course._id)}
+                      onClick={() =>
+                        handleEnroll(
+                          course._id,
+                          course.imageUrl,
+                          course.title,
+                          course.duration,
+                          course.level,
+                          course.creatorId.firstName
+                        )
+                      }
                       disabled={user?.enrolledCourses.includes(course._id)}
                     >
                       {user?.enrolledCourses.includes(course._id)

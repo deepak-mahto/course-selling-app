@@ -11,6 +11,7 @@ import { Button } from "../components/ui/button";
 import { Clock, GraduationCap } from "lucide-react";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { BACKEND_URL } from "../config";
 
 export default function Dashboard() {
   const { user } = useAuth();
@@ -20,23 +21,16 @@ export default function Dashboard() {
   useEffect(() => {
     const getData = async () => {
       setLoading(true);
-      const response = await axios.get(
-        "https://tech-courses-be.onrender.com/api/v1/user/purchases",
-        {
-          headers: {
-            Authorization: localStorage.getItem("token"),
-          },
-        }
-      );
-      setCourses(response.data.courseData);
+      const response = await axios.get(`${BACKEND_URL}/api/v1/user/purchases`, {
+        headers: {
+          Authorization: localStorage.getItem("token"),
+        },
+      });
+      setCourses(response.data.purchases);
       setLoading(false);
     };
     getData();
   }, []);
-
-  const enrolledCourses = courses.filter((course: { _id: string }) =>
-    user?.enrolledCourses.includes(course._id)
-  );
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -50,16 +44,14 @@ export default function Dashboard() {
         <div className="flex justify-center items-center">Loading...</div>
       ) : (
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {enrolledCourses.map(
+          {courses.map(
             (course: {
               _id: string;
               imageUrl: string;
               title: string;
               duration: string;
-              creatorId: {
-                firstName: string;
-              };
               level: string;
+              creatorName: string;
             }) => (
               <Card
                 key={course._id}
@@ -74,9 +66,7 @@ export default function Dashboard() {
                     />
                   </div>
                   <CardTitle className="mt-4">{course.title}</CardTitle>
-                  <CardDescription>
-                    {course.creatorId.firstName}
-                  </CardDescription>
+                  <CardDescription>{course.creatorName}</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <div className="flex items-center gap-4 text-sm text-gray-600">
